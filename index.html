@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Google SDE Prep — Progress Tracker</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="name-overlay hidden" id="welcomeOverlay" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+  <div class="welcome-card">
+    <div class="eyebrow">Welcome to your preparation workspace</div>
+    <h2 id="welcomeTitle">What should we call you?</h2>
+    <p>Your tracker will be personalized with your name. You can change it anytime in Career Intelligence → Candidate Profile.</p>
+    <label for="welcomeName">Your name</label>
+    <input id="welcomeName" type="text" maxlength="60" placeholder="Enter your name" autocomplete="given-name">
+    <button id="welcomeContinue">Continue</button>
+    <div id="welcomeError" class="muted" style="font-size:12px;margin-top:9px"></div>
+  </div>
+</div>
+
+<div class="shell">
+<aside class="sidebar"><div class="brand" id="brandName">GOOGLE <span>SDE PREP</span></div><nav class="nav" id="nav">
+<button class="active" data-page="dashboard">◫ &nbsp;Dashboard</button><button data-page="daily">☑ &nbsp;Daily log</button><button data-page="calendar">▦ &nbsp;Calendar</button><button data-page="dsa">⌘ &nbsp;DSA tracker</button><button data-page="python">⌨ &nbsp;Python tracker</button><button data-page="projects">◈ &nbsp;GitHub projects</button><button data-page="reports">▤ &nbsp;Reports & analytics</button><button data-page="roadmap">➜ &nbsp;12-month roadmap</button><button data-page="career">◎ &nbsp;Career intelligence</button>
+</nav><div class="side-note">Local-first tracker · Your data stays in this browser on this computer.</div></aside>
+<main class="main">
+<header class="top"><div><div class="eyebrow" id="workspaceGreeting">Your preparation workspace</div><h1 id="pageTitle">Dashboard</h1><div class="muted" id="todayLabel"></div></div><div class="actions"><button class="secondary" id="exportBtn">Export backup</button><button class="secondary" id="importBtn">Import backup</button><input type="file" id="importFile" accept=".json" class="hidden"></div></header>
+
+<section class="section active" id="dashboard">
+<div class="grid stats">
+<div class="card"><div class="stat-label">TODAY'S STUDY</div><div class="stat-value" id="todayHours">0.0h</div><div class="stat-foot">Target: 6 focused hours</div><div class="bar" style="margin-top:10px"><i id="todayBar" style="width:0%"></i></div></div>
+<div class="card"><div class="stat-label">TOTAL STUDY TIME</div><div class="stat-value" id="totalHours">0h</div><div class="stat-foot">Across all logged days</div></div>
+<div class="card"><div class="stat-label">DSA PROBLEMS SOLVED</div><div class="stat-value" id="dsaCount">0</div><div class="stat-foot">Target: 250–300 quality problems</div></div>
+<div class="card"><div class="stat-label">CURRENT STREAK</div><div class="stat-value" id="streak">0 days</div><div class="stat-foot">Days with at least one study hour</div></div>
+</div>
+<div class="grid two">
+<div class="card"><div class="row"><h2>Today's check-in</h2><span class="pill">6-hour target</span></div><div class="grid three" style="gap:9px;margin:12px 0"><div><div class="stat-label">Learn</div><strong>2h</strong></div><div><div class="stat-label">Practice</div><strong>2h</strong></div><div><div class="stat-label">Build & revise</div><strong>2h</strong></div></div><div class="bar"><i id="dashBar" style="width:0%"></i></div><p class="muted" id="dashProgress">0 of 6 hours completed</p><button onclick="go('daily')">Add today's log</button></div>
+<div class="card"><h2>Weekly study hours</h2><div class="chart" id="weekChart"></div><div class="row muted" style="font-size:11px;margin-top:8px"><span>Last 7 days</span><strong id="weekTotal">0h total</strong></div></div>
+</div>
+<div class="grid two" style="margin-top:16px">
+<div class="card"><h2>Preparation snapshot</h2><div id="snapshot" class="list"></div></div>
+<div class="card"><h2>Next priorities</h2><div class="list"><div class="item"><strong>1. Python fundamentals</strong><br><small>Build fluency through daily coding and small exercises.</small></div><div class="item"><strong>2. DSA consistency</strong><br><small>Understand patterns, explain complexity, revisit mistakes.</small></div><div class="item"><strong>3. CS + projects</strong><br><small>SQL, DBMS, OS, networking, testing and deployable projects.</small></div></div></div>
+</div>
+</section>
+
+<section class="section" id="daily">
+<div class="grid two">
+<div class="card"><h2>Daily study log</h2><div class="field"><label>Date</label><input type="date" id="logDate"></div><div class="formgrid">
+<div class="field"><label>Python (hours)</label><input type="number" min="0" max="24" step=".25" id="logPython" value="0"></div><div class="field"><label>DSA (hours)</label><input type="number" min="0" max="24" step=".25" id="logDsa" value="0"></div>
+<div class="field"><label>CS / SQL / system design (hours)</label><input type="number" min="0" max="24" step=".25" id="logCs" value="0"></div><div class="field"><label>Project / GitHub (hours)</label><input type="number" min="0" max="24" step=".25" id="logProject" value="0"></div>
+<div class="field"><label>Revision / interview prep (hours)</label><input type="number" min="0" max="24" step=".25" id="logRevision" value="0"></div><div class="field"><label>Problems solved today</label><input type="number" min="0" id="logSolved" value="0"></div>
+<div class="field wide"><label>What did you learn?</label><textarea id="logLearn" placeholder="Concepts, patterns, notes..."></textarea></div><div class="field wide"><label>Blockers / plan for tomorrow</label><textarea id="logBlock" placeholder="What was difficult? What will you do next?"></textarea></div></div><button id="saveLog">Save daily log</button><span id="saveMsg" class="muted" style="margin-left:10px"></span></div>
+<div class="card"><h2>Daily routine checklist</h2><p class="muted">A suggested six-hour structure. Tick each block as you complete it.</p><div class="list" id="routine"></div><div class="notice" style="margin-top:14px">Aim for six focused hours, not six hours with distractions. Breaks are separate.</div></div>
+</div>
+<div class="card" style="margin-top:16px"><div class="row"><h2>Recent daily logs</h2><span class="muted" id="logCount">0 entries</span></div><div class="tablewrap"><table><thead><tr><th>Date</th><th>Total hours</th><th>Python</th><th>DSA</th><th>Other</th><th>Solved</th><th>Notes</th></tr></thead><tbody id="logsTable"></tbody></table></div></div>
+</section>
+
+<section class="section" id="calendar"><div class="card"><div class="row"><div><h2>Study calendar</h2><div class="muted">Green days show a saved study log.</div></div><div class="actions"><button class="secondary smallbtn" id="prevMonth">←</button><strong id="monthLabel"></strong><button class="secondary smallbtn" id="nextMonth">→</button></div></div><div class="calendar" id="calendarGrid" style="margin-top:16px"></div></div></section>
+
+<section class="section" id="dsa"><div class="grid two">
+<div class="card"><h2>Add DSA problem</h2><div class="field"><label>Problem name</label><input id="dsaName" placeholder="e.g. Two Sum"></div><div class="formgrid"><div class="field"><label>Topic</label><select id="dsaTopic"><option>Arrays & Strings</option><option>Hashing</option><option>Two Pointers</option><option>Sliding Window</option><option>Binary Search</option><option>Linked Lists</option><option>Stacks & Queues</option><option>Trees & BST</option><option>Heaps</option><option>Graphs</option><option>Backtracking</option><option>Dynamic Programming</option><option>Greedy</option><option>Tries</option><option>Other</option></select></div><div class="field"><label>Difficulty</label><select id="dsaDifficulty"><option>Easy</option><option>Medium</option><option>Hard</option></select></div><div class="field"><label>Status</label><select id="dsaStatus"><option>Solved</option><option>Attempted</option><option>Revisit</option></select></div><div class="field"><label>Time taken (minutes)</label><input type="number" id="dsaTime" min="0" value="30"></div></div><div class="field"><label>Problem URL (optional)</label><input id="dsaUrl" placeholder="https://..."></div><div class="field"><label>Key learning / mistake</label><textarea id="dsaNote"></textarea></div><button id="addDsa">Add problem</button></div>
+<div class="card"><h2>DSA progress</h2><div class="stat-value" id="dsaSolvedBig">0 / 300</div><div class="bar"><i id="dsaProgressBar" style="width:0%"></i></div><p class="muted" id="dsaSub">Track quality and revision, not just quantity.</p><div id="topicBreakdown" class="list"></div></div>
+</div><div class="card" style="margin-top:16px"><h2>Problem history</h2><div class="tablewrap"><table><thead><tr><th>Problem</th><th>Topic</th><th>Level</th><th>Status</th><th>Time</th><th>Learning</th><th></th></tr></thead><tbody id="dsaTable"></tbody></table></div></div></section>
+
+<section class="section" id="python"><div class="grid two"><div class="card"><h2>Python skill checklist</h2><p class="muted">Mark a topic complete only when you can code it without copying.</p><div class="list" id="pythonTopics"></div><div class="row" style="margin-top:14px"><strong id="pythonPercent">0% complete</strong><span class="muted" id="pythonDone">0 / 0 topics</span></div><div class="bar"><i id="pythonBar" style="width:0%"></i></div></div><div class="card"><h2>Practice exercise log</h2><div class="field"><label>Exercise / mini task</label><input id="pyExercise" placeholder="e.g. Build a word frequency counter"></div><div class="field"><label>Concept</label><select id="pyConcept"><option>Basics & variables</option><option>Conditions & loops</option><option>Strings & collections</option><option>Functions</option><option>OOP</option><option>Files & exceptions</option><option>Modules & packages</option><option>Iterators & generators</option><option>Testing</option><option>Other</option></select></div><div class="field"><label>Result / GitHub link</label><input id="pyResult" placeholder="Short note or repository URL"></div><button id="addPy">Add exercise</button><div id="pyExercises" class="list" style="margin-top:14px"></div></div></div></section>
+
+<section class="section" id="projects"><div class="grid two"><div class="card"><h2>Add GitHub project</h2><div class="field"><label>Project name</label><input id="projName" placeholder="e.g. Student Management API"></div><div class="field"><label>Tech stack</label><input id="projStack" placeholder="Python, FastAPI, PostgreSQL"></div><div class="field"><label>GitHub repository URL</label><input id="projUrl" placeholder="https://github.com/username/repo"></div><div class="field"><label>Status</label><select id="projStatus"><option>Planned</option><option>In progress</option><option>Completed</option></select></div><div class="field"><label>Next milestone</label><textarea id="projNext" placeholder="What will you build next?"></textarea></div><button id="addProject">Add project</button></div><div class="card"><h2>Portfolio targets</h2><div class="list"><div class="item"><strong>Project 1 · Core software</strong><br><small>Python backend + database + tests + documentation.</small></div><div class="item"><strong>Project 2 · Full-stack / API</strong><br><small>Authentication, validation, deployment and clean README.</small></div><div class="item"><strong>Project 3 · AI / ML</strong><br><small>Practical ML or LLM application with evaluation and clear trade-offs.</small></div></div></div></div><div class="card" style="margin-top:16px"><h2>Your projects</h2><div id="projectList" class="grid three"></div></div></section>
+
+
+<section class="section" id="career">
+<div class="notice" style="margin-bottom:16px">Career Intelligence connects preparation progress to job requirements. Results are screening estimates based on details you enter. Always verify the official vacancy description. New openings are not automatically discovered by this local tracker.</div>
+<div class="grid stats">
+<div class="card"><div class="stat-label">TRACKED VACANCIES</div><div class="stat-value" id="jobCount">0</div><div class="stat-foot">Saved opportunities</div></div>
+<div class="card"><div class="stat-label">POTENTIAL MATCHES</div><div class="stat-value" id="jobReadyCount">0</div><div class="stat-foot">Academic criteria entered</div></div>
+<div class="card"><div class="stat-label">APPLICATIONS SUBMITTED</div><div class="stat-value" id="appliedCount">0</div><div class="stat-foot">Applied or later stages</div></div>
+<div class="card"><div class="stat-label">COMPLETED PROJECTS</div><div class="stat-value" id="careerProjectCount">0</div><div class="stat-foot">Portfolio progress</div></div>
+</div>
+<div class="grid two">
+<div class="card"><h2>Your candidate profile</h2><div class="formgrid">
+<div class="field wide"><label>Your name</label><input id="profileName" maxlength="60" placeholder="Enter your name"></div>
+<div class="field"><label>Degree</label><input id="profileDegree" value="BCA"></div>
+<div class="field"><label>Graduation year</label><input id="profileYear" type="number" value="2025"></div>
+<div class="field"><label>CGPA</label><input id="profileCgpa" type="number" min="0" max="10" step=".01" value="7.5"></div>
+<div class="field"><label>Experience</label><input id="profileExperience" value="Fresher"></div>
+<div class="field wide"><label>Preferred locations</label><input id="profileLocations" value="Mumbai, Navi Mumbai, Bengaluru, Hyderabad, Gurugram, Noida"></div>
+<div class="field wide"><label>Target annual CTC</label><input id="profileSalary" value="₹8–12 LPA"></div>
+</div><button id="saveProfile">Save candidate profile</button><span id="profileMsg" class="muted" style="margin-left:8px"></span></div>
+<div class="card"><h2>Preparation signals</h2><div class="list" id="careerSignals"></div><p class="muted" style="font-size:11px">Progress indicators only; not employer-certified assessments or guarantees of interview readiness.</p></div>
+</div>
+<div class="card" style="margin-top:16px"><h2>Target companies</h2><div class="company-grid">
+<div class="company-tile"><strong>Google</strong><br><a href="https://www.google.com/about/careers/applications/" target="_blank" rel="noopener">Official careers ↗</a></div>
+<div class="company-tile"><strong>Microsoft</strong><br><a href="https://jobs.careers.microsoft.com/" target="_blank" rel="noopener">Official careers ↗</a></div>
+<div class="company-tile"><strong>Amazon</strong><br><a href="https://www.amazon.jobs/" target="_blank" rel="noopener">Official careers ↗</a></div>
+<div class="company-tile"><strong>Adobe</strong><br><a href="https://careers.adobe.com/" target="_blank" rel="noopener">Official careers ↗</a></div>
+<div class="company-tile"><strong>Atlassian</strong><br><a href="https://www.atlassian.com/company/careers" target="_blank" rel="noopener">Official careers ↗</a></div>
+</div></div>
+<div class="grid two" style="margin-top:16px">
+<div class="card"><h2>Add a vacancy to check</h2>
+<div class="field"><label>Company</label><input id="jobCompany" list="companyNames" placeholder="e.g. Google"><datalist id="companyNames"><option>Google</option><option>Microsoft</option><option>Amazon</option><option>Adobe</option><option>Atlassian</option><option>Other</option></datalist></div>
+<div class="field"><label>Job title</label><input id="jobTitle" placeholder="e.g. Software Engineer, University Graduate"></div>
+<div class="formgrid">
+<div class="field"><label>Location</label><input id="jobLocation" placeholder="e.g. Bengaluru"></div>
+<div class="field"><label>Minimum CGPA (optional)</label><input id="jobMinCgpa" type="number" min="0" max="10" step=".01"></div>
+<div class="field"><label>Graduation year from</label><input id="jobYearFrom" type="number" placeholder="e.g. 2024"></div>
+<div class="field"><label>Graduation year to</label><input id="jobYearTo" type="number" placeholder="e.g. 2026"></div>
+<div class="field"><label>Experience requirement</label><select id="jobExperience"><option>Any / not specified</option><option>Fresher / 0 years</option><option>1+ years</option><option>2+ years</option><option>3+ years</option></select></div>
+<div class="field"><label>Application status</label><select id="jobStatus"><option>Interested</option><option>Preparing</option><option>Applied</option><option>Online assessment</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Closed</option></select></div>
+</div>
+<div class="field"><label>Mandatory skills / job-description notes</label><textarea id="jobSkills" placeholder="Paste key requirements from the official description"></textarea></div>
+<div class="field"><label>Official job URL</label><input id="jobUrl" type="url" placeholder="https://..."></div>
+<div class="field"><label>Deadline</label><input id="jobDeadline" type="date"></div>
+<button id="addJob">Save vacancy & check profile</button>
+</div>
+<div class="card"><h2>Eligibility rules</h2><div class="list">
+<div class="item"><strong>Academic eligibility</strong><br><small>Compares degree details you maintain with CGPA and graduation-year criteria you enter.</small></div>
+<div class="item"><strong>Experience eligibility</strong><br><small>Flags roles asking for prior experience beyond a fresher profile.</small></div>
+<div class="item"><strong>Technical readiness</strong><br><small>Displays DSA, Python and project progress separately; study hours alone do not prove a required skill.</small></div>
+<div class="item"><strong>Final verification</strong><br><small>Check degree discipline, work authorization, dates, skills and every other condition in the full official job description.</small></div>
+</div></div>
+</div>
+<div class="card" style="margin-top:16px"><div class="row"><h2>Vacancy & application pipeline</h2><span class="muted" id="jobTableCount">0 saved</span></div><div class="tablewrap"><table><thead><tr><th>Company / role</th><th>Location</th><th>Academic check</th><th>Experience</th><th>Status</th><th>Deadline</th><th>Official link</th><th></th></tr></thead><tbody id="jobsTable"></tbody></table></div></div>
+</section>
+
+<section class="section" id="reports"><div class="grid stats"><div class="card"><div class="stat-label">THIS MONTH</div><div class="stat-value" id="monthHours">0h</div><div class="stat-foot">Focused study time</div></div><div class="card"><div class="stat-label">AVERAGE / DAY</div><div class="stat-value" id="avgHours">0h</div><div class="stat-foot">Including zero-study days</div></div><div class="card"><div class="stat-label">TARGET DAYS</div><div class="stat-value" id="targetDays">0</div><div class="stat-foot">Days with 6+ hours</div></div><div class="card"><div class="stat-label">LOGGED DAYS</div><div class="stat-value" id="loggedDays">0</div><div class="stat-foot">Days with any study</div></div></div><div class="grid two"><div class="card"><h2>Monthly study hours</h2><div class="chart" id="monthChart"></div></div><div class="card"><h2>Weekly report</h2><div id="weeklyReport" class="list"></div></div></div><div class="card" style="margin-top:16px"><h2>Monthly analytics by category</h2><div id="categoryAnalytics" class="list"></div></div></section>
+
+<section class="section" id="roadmap"><div class="card"><div class="row"><div><h2>12-month roadmap</h2><div class="muted">A practical sequence for Google SDE preparation, with software foundations first and AI as a complementary track.</div></div><span class="pill">Beginner → interview-ready</span></div><div id="roadmapList"></div><div class="notice" style="margin-top:14px">This is a preparation plan, not a promise of hiring or a Google-specific official syllabus. Adapt the pace based on your assessment results.</div></div></section>
+<div class="footer" id="storageStatus">Autosave enabled · Local storage is browser-specific. Export a JSON backup regularly, especially before clearing browser data or changing computers.</div>
+</main></div>
+<script type="module" src="js/app.js"></script></body></html>
